@@ -20,6 +20,7 @@ public class PlayerController : MonoBehaviour
     private Vector2 touchStartPosition, touchEndPosition;
     private string dir; // swipe direction
     private bool canSwipe = false;
+    private bool multipleSlide = false;
 
     public Animator animator;
 
@@ -88,13 +89,12 @@ public class PlayerController : MonoBehaviour
                 {
                     if (isSliding)
                     {
-                        isSliding = false;  // jump interruprs sliding
+                        gravity += 100;  // jump interruprs sliding
                     }
-                    else
-                    {
-                        animator.SetBool("isJump", true);
-                        direction.y = jumpSpeed;
-                    }
+                    
+                    animator.SetBool("isJump", true);
+                    direction.y = jumpSpeed;
+                    
                 }
                 else
                 {
@@ -109,6 +109,8 @@ public class PlayerController : MonoBehaviour
                 {
                     StartCoroutine(Slide());
                 }
+                else 
+                    multipleSlide = true;
   
             }
             
@@ -123,14 +125,6 @@ public class PlayerController : MonoBehaviour
             {
                 lane--;
                 if (lane == -1) lane = 0;
-            }
-
-            if (!isSliding)  // returning from sliding state
-            {
-                animator.SetBool("isSliding", false);
-                controller.height = 2;
-                if (gravity != tempGravity)
-                    gravity = tempGravity;
             }
 
             Vector3 newPosition = transform.position.z * transform.forward + transform.position.y * transform.up;
@@ -159,13 +153,18 @@ public class PlayerController : MonoBehaviour
     private IEnumerator Slide()
     {
         isSliding = true;
-        gravity = -150;
+        gravity -= 100;
         animator.SetBool("isSliding", true);
         controller.height = 1;                   // to pass under the barrier
-        yield return new WaitForSeconds(1);  // sliding time
+        yield return new WaitForSeconds(1);      // sliding time
+        if (multipleSlide)
+            yield return new WaitForSeconds(1);  // double slide
         isSliding = false;
-        
-
+        multipleSlide = false;
+        animator.SetBool("isSliding", false);
+        controller.height = 2;
+        if (gravity != tempGravity)
+            gravity = tempGravity;
     }
 
 }
