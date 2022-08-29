@@ -1,10 +1,13 @@
-EndlessRunnerGame is a 3D game where a player is constantly moving forward while collecting points and avoiding obstacles. The level repeats itself infinitely, gradually increasing difficulty, until the player collides with the obstacle. 
+**EndlessRunnerGame** is a 3D game where a player is constantly moving forward while collecting points and avoiding obstacles. The level repeats itself infinitely, gradually increasing difficulty, until the player collides with the obstacle. 
 This game is made with Unity 2021.3.6f1 for Android platforms. Tested on Android 8, 12 with all display resolutions. All models were downloaded from 3D stocks for free. 
 
-Program description
+
+**Program description**
+
 After the game starts, user controls the player (cat) by swiping left and right to change the traffic lane, up to jump over the barrier and down to slip under the barrier. The longer the game lasts, the more points the player gets. Points are made up of playing time and the number of collected coins, which in this case are sushi eaten by the cat. As soon as the player crashes into an obstacle, the game ends. The user can repeat the game or quit. 
 
-Program structure
+**Program structure**
+
 The scripts for the game are written in C# programming language. The program is divided into six parts, which are C# classes that represent and control behavior of individual parts of the game, such as: level generation, camera control, player control, event handler and some objects control..
 Detailed functions are listed below. 
 
@@ -26,12 +29,12 @@ This class defines behavior of the coin. When a player encounters the coin, it d
 - Events.cs
 Functions of this class are called in response to events, that are triggerred by button click. 
 
-What can be added to the game to improve it:
+**What can be added to the game to improve it:**
 - More diverse obstacles and environment
 - Hight score
 - Smoother player movement - for now it simply "teleports" to a new position
 - Sound effects and music 
 
-Links and resourses:
-- [Official Unity documentation and manual: ](https://docs.unity3d.com/Manual)
-- [3D models: ](https://sketchfab.com)
+**Links and resourses:**
+- [Official Unity documentation and manual](https://docs.unity3d.com/Manual)
+- [3D models](https://sketchfab.com)
