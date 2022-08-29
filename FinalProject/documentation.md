@@ -34,4 +34,4 @@ What can be added to the game to improve it:
 
 Links and resourses:
 - [Official Unity documentation and manual: ](https://docs.unity3d.com/Manual)
-- [3D models: ](https://free3d.com ; https://sketchfab.com)
+- [3D models: ](https://sketchfab.com)
