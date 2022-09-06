@@ -18,10 +18,12 @@ public class PlayerController : MonoBehaviour
     private bool isSliding = false;
     private Touch theTouch;
     private Vector2 touchStartPosition, touchEndPosition;
-    private string dir; // swipe direction
+    private enum SwipeDirection { None, Up, Down, Left, Right }
+    SwipeDirection dir;
     private bool canSwipe = false;
     private bool multipleSlide = false;
-
+    public AudioSource gameOverSound;
+    public AudioSource mainTheme;
     public Animator animator;
 
     // Start is called before the first frame update
@@ -29,11 +31,13 @@ public class PlayerController : MonoBehaviour
     {
         controller = gameObject.AddComponent<CharacterController>();
         tempGravity = gravity;
+        mainTheme.Play();
     }
 
     // Update is called once per frame
     void Update()
     {
+
         if(zSpeed < maxSpeed)
         {
             zSpeed += 0.1f * Time.deltaTime; // speed increasing
@@ -45,7 +49,7 @@ public class PlayerController : MonoBehaviour
             animator.SetBool("isGameStarted", true);
             controller.Move(direction * Time.deltaTime);
 
-            dir = "noSwipe";
+            dir = SwipeDirection.None;
             if (Input.touchCount > 0)
             {
                 theTouch = Input.GetTouch(0);
@@ -66,17 +70,17 @@ public class PlayerController : MonoBehaviour
                         {
                             if (diff.x > 0)
                             {
-                                dir = "Right";
+                                dir = SwipeDirection.Right;
                             }
-                            else dir = "Left";
+                            else dir = SwipeDirection.Left;
                         }
                         else
                         {
                             if (diff.y > 0)
                             {
-                                dir = "Up";
+                                dir = SwipeDirection.Up;
                             }
-                            else dir = "Down";
+                            else dir = SwipeDirection.Down;
                         }
                     }   
                 }
@@ -85,16 +89,14 @@ public class PlayerController : MonoBehaviour
             if (controller.isGrounded)
             {
                 //if (Input.GetKeyDown(KeyCode.UpArrow))   <--- to play with keyboard arrows
-                if (dir == "Up")
+                if (dir == SwipeDirection.Up)
                 {
                     if (isSliding)
-                    {
-                        gravity += 100;  // jump interruprs sliding
+                    { 
+                        gravity += 100; // jump interrupts sliding
                     }
-                    
                     animator.SetBool("isJump", true);
                     direction.y = jumpSpeed;
-                    
                 }
                 else
                 {
@@ -103,25 +105,25 @@ public class PlayerController : MonoBehaviour
             }
 
             //if (Input.GetKeyDown(KeyCode.DownArrow) && !isSliding)
-            if (dir == "Down")
+            if (dir == SwipeDirection.Down)
             {
                 if (!isSliding)
                 {
                     StartCoroutine(Slide());
                 }
-                else 
+                else
                     multipleSlide = true;
   
             }
             
             //if (Input.GetKeyDown(KeyCode.RightArrow))
-            if (dir == "Right")
+            if (dir == SwipeDirection.Right)
             {
                 lane++;
                 if (lane == 3) lane = 2;
             }
             //if (Input.GetKeyDown(KeyCode.LeftArrow))
-            if (dir == "Left")
+            if (dir == SwipeDirection.Left)
             {
                 lane--;
                 if (lane == -1) lane = 0;
@@ -137,7 +139,15 @@ public class PlayerController : MonoBehaviour
                 newPosition += Vector3.right * move;
             }
 
-            transform.position = Vector3.Lerp(transform.position, newPosition, smoothFactor); // smooth movement between lanes
+            // transform.position = Vector3.Lerp(transform.position, newPosition, smoothFactor); // smooth movement between lanes
+
+            Vector3 dist = newPosition - transform.position;
+            Vector3 movement = dist.normalized * zSpeed * Time.deltaTime;  // gradual, swooth movement
+            if (Mathf.Abs(movement.x) > Mathf.Abs(dist.x)) // desired position exceeded
+            {
+                movement = dist;  // to limit the movement
+            }
+            controller.Move(movement);
         }
 
     }
@@ -145,6 +155,7 @@ public class PlayerController : MonoBehaviour
     {
         if (hit.transform.tag == "Barrier")
         {
+            gameOverSound.Play();
             GameManager.gameOver = true;
             zSpeed = 0;
             animator.SetBool("isGameStarted", false);
@@ -165,6 +176,7 @@ public class PlayerController : MonoBehaviour
         controller.height = 2;
         if (gravity != tempGravity)
             gravity = tempGravity;
+
     }
 
 }
