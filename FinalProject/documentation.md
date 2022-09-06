@@ -31,10 +31,8 @@ Functions of this class are called in response to events, that are triggerred by
 
 **What can be added to the game to improve it:**
 - More diverse obstacles and environment
-- Hight score
-- Smoother player movement - for now it simply "teleports" to a new position
-- Sound effects and music 
 
 **Links and resourses:**
 - [Official Unity documentation and manual](https://docs.unity3d.com/Manual)
 - [3D models](https://sketchfab.com)
+- [Music](https://pixabay.com/sound-effects/)
